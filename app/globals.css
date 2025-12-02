@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+:root {
+  --foreground: hsl(180 45% 4%);
+  --background: hsl(175 27% 91%);
+  --accent: hsl(2 63% 70%);
+  --primary: hsl(178 63% 70%);
+  --secondary: hsl(178 81% 35%);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-accent: var(--accent);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+
+  --font-body: var(--font-tektur);
+  --font-heading: var(--font-amita);
+
+  --text-10xl: 256px;
+  --text-10xl--line-height: 1;
+
+  --bg-pattern: url("/pattern.svg");
+
+  --bg-overlay: radial-gradient(
+    ellipse at center,
+    hsl(178 81% 35% / 0.1),
+    hsl(180 45% 4% / 0.9) 80%
+  );
+
+  --text-shadow-custom:
+    47px 31px 16px rgba(0, 0, 0, 0.2), 30px 20px 14px rgba(0, 0, 0, 0.15),
+    17px 11px 12px rgba(0, 0, 0, 0.5), 8px 5px 9px rgba(0, 0, 0, 0.85),
+    2px 1px 5px rgba(0, 0, 0, 0.98);
+}
+
+@utility text-shadow-custom {
+  text-shadow: var(--text-shadow-custom);
+}
+
+@utility bg-pattern {
+  background-image: var(--bg-overlay), var(--bg-pattern);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: hsl(180 45% 4%);
+    --foreground: hsl(175 27% 91%);
+    --accent: hsl(2 63% 70%);
+    --primary: hsl(178 63% 70%);
+    --secondary: hsl(178 81% 35%);
+  }
+}
+
+body {
+  @apply bg-background text-foreground font-body text-shadow-custom;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply font-heading;
+}
