@@ -7,7 +7,7 @@ const Home = () => {
   const [toastShow, setToastShow] = useState<boolean>(false);
 
   const handleGetSearchEngine = () => {
-    navigator.clipboard.writeText(`${window.location.href}/api/search?q=`);
+    navigator.clipboard.writeText(`${window.location.href}/api/search?q=%s`);
     setToastShow(true);
     setTimeout(() => setToastShow(false), 3000);
   };
