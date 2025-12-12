@@ -81,7 +81,6 @@ Total bangs: ${bangEntries.length} */
 
 export type MinimalBang = {
   d: string;
-  t: string;
   u: string;
 };
 
@@ -89,7 +88,7 @@ export const bangMap = new Map<string, MinimalBang>([
 ${bangEntries
   .map(
     ([t, b]) =>
-      `  ["${t}", { d: ${jsString(b.d)}, t: "${t}", u: ${jsString(b.u)} } satisfies MinimalBang]`,
+      `  ["${t}", { d: ${jsString(b.d)}, u: ${jsString(b.u)} } satisfies MinimalBang]`,
   )
   .join(",\n")}
 ]);
