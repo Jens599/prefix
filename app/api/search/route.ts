@@ -27,25 +27,9 @@ async function getLuckyUrl(
   const q = query.trim();
   if (!q) return new URL(defaultEngineUrl).origin;
 
-  try {
-    const res = await fetch(
-      `https://api.duckduckgo.com/?q=${encodeURIComponent(q)}&format=json&no_redirect=1&t=prefix`,
-      { cache: "no-store" },
-    );
-
-    if (!res.ok) throw new Error();
-    const data = await res.json();
-
-    if (data.Redirect) return data.Redirect;
-
-    if (data.AbstractURL) return data.AbstractURL;
-
-    if (data.RelatedTopics?.length > 0) {
-      let topUrl = data.RelatedTopics[0].FirstURL;
-      if (topUrl.startsWith("/")) topUrl = `https://duckduckgo.com${topUrl}`;
-      return topUrl;
-    }
-  } catch {}
+  if (defaultEngineUrl.includes("duckduckgo.com")) {
+    return `https://www.duckduckgo.com/lite/?q=${encodeURIComponent(q + " !ducky")}`;
+  }
 
   if (defaultEngineUrl.includes("google.com")) {
     return `https://www.google.com/search?q=${encodeURIComponent(q)}&btnI=1`;
@@ -61,23 +45,22 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
   const raw = url.searchParams.get("q")?.trim() ?? "";
 
-  if (!raw) {
-    return NextResponse.redirect(new URL("/", request.url));
-  }
-
   const defaultEngine = getUserDefaultEngine(request);
 
+  if (!raw) {
+    return NextResponse.redirect(defaultEngine.d);
+  }
+
   const lowerRaw = raw.toLowerCase();
-  const duckyPrefix = lowerRaw.startsWith("!ducky");
-  const duckySuffix = lowerRaw.endsWith("!ducky");
+  const duckyPrefix = lowerRaw.match(/^!\s/);
+
+  const duckySuffix = lowerRaw.match(/\s!$/);
+
   const isLucky = duckyPrefix || duckySuffix;
 
   let queryForProcessing = raw;
   if (isLucky) {
-    queryForProcessing = raw
-      .replace(/^!ducky\s*/i, "")
-      .replace(/\s*!ducky$/i, "")
-      .trim();
+    queryForProcessing = raw.replace(/^!\s/i, "").replace(/\s*!$/i, "").trim();
   }
 
   const bangMatch = queryForProcessing.match(
